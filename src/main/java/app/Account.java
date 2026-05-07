@@ -126,7 +126,8 @@ public abstract class Account {
    */
   protected void doWithdrawing(double amount)
       throws InvalidFundingAmountException, InsufficientFundsException {
-    if (amount <= 0) {
+    if(amount <= 0)
+    {
       LOGGER.warn("Quá trình rút tiền thất bại: Số tiền không hợp lệ {}", amount);
       throw new InvalidFundingAmountException(amount);
     }
