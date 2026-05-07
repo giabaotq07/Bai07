@@ -84,7 +84,8 @@ public class Customer {
    * @param accountList danh sách tài khoản mới
    */
   public void setAccountList(List<Account> accountList) {
-    if (accountList == null) {
+    if(accountList == null)
+    {
       this.accountList = new ArrayList<Account>();
     } else {
       this.accountList = accountList;

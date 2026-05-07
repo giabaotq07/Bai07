@@ -26,7 +26,16 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
           cache: maven
-
+      - name: Checkstyle Reviewer
+        # Chỉ chạy bước này khi có Pull Request để tránh spam log ở các lần push thường
+        if: always() && github.event_name == 'pull_request' && runner.os == 'Linux'
+        uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # File cấu hình checkstyle bạn đang dùng (thường là google_checks.xml)
+          checkstyle_config: google_checks.xml
+          level: warning
+          fail_level: warning
       - name: Run Maven Build and Test
         run: mvn clean package
 
@@ -37,12 +46,3 @@ jobs:
           # Nối thêm tên OS vào artifact để không bị ghi đè lên nhau
           name: banksystem-artifact-${{ matrix.os }}
           path: target/*.jar
-      - name: Checkstyle Reviewer
-        # Chỉ chạy bước này khi có Pull Request để tránh spam log ở các lần push thường
-        if: github.event_name == 'pull_request'
-        uses: dbelyaev/action-checkstyle@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # File cấu hình checkstyle bạn đang dùng (thường là google_checks.xml)
-          checkstyle_config: google_checks.xml
-          level: warning
