@@ -1,0 +1,48 @@
+name: BankSystem CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    # 1. Khai báo chiến lược Matrix
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    # 2. Sử dụng biến matrix cho môi trường chạy
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run Maven Build and Test
+        run: mvn clean package
+
+      - name: Upload JAR Artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          # Nối thêm tên OS vào artifact để không bị ghi đè lên nhau
+          name: banksystem-artifact-${{ matrix.os }}
+          path: target/*.jar
+      - name: Checkstyle Reviewer
+        # Chỉ chạy bước này khi có Pull Request để tránh spam log ở các lần push thường
+        if: github.event_name == 'pull_request'
+        uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # File cấu hình checkstyle bạn đang dùng (thường là google_checks.xml)
+          checkstyle_config: google_checks.xml
+          level: warning
