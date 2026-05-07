@@ -46,3 +46,4 @@ jobs:
           # File cấu hình checkstyle bạn đang dùng (thường là google_checks.xml)
           checkstyle_config: google_checks.xml
           level: warning
+          fail_level: error
