@@ -131,7 +131,8 @@ public abstract class Account {
       LOGGER.warn("Quá trình rút tiền thất bại: Số tiền không hợp lệ {}", amount);
       throw new InvalidFundingAmountException(amount);
     }
-    if (amount > balance) {
+    if(amount > balance)
+    {
       LOGGER.warn("Quá trình rút tiền thất bại: Tài khoản không đủ số dư để rút {} (Số dư hiện tại: {})", amount, balance);
       throw new InsufficientFundsException(amount);
     }
