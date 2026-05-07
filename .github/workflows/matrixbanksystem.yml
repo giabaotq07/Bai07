@@ -39,7 +39,7 @@ jobs:
           path: target/*.jar
       - name: Checkstyle Reviewer
         # Chỉ chạy bước này khi có Pull Request để tránh spam log ở các lần push thường
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && runner.os == 'Linux'
         uses: dbelyaev/action-checkstyle@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
